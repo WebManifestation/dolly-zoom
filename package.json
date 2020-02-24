@@ -4,13 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server --mode development",
+    "start": "webpack-dev-server --mode development --host 0.0.0.0",
     "build": "webpack --mode production",
     "dev": "webpack --mode development --watch"
   },
   "author": "Raphael Kottakal",
   "license": "ISC",
   "dependencies": {
+    "@tweenjs/tween.js": "^18.5.0",
     "stats.js": "^0.17.0",
     "three": "^0.113.2",
     "webpack": "^4.41.5",
