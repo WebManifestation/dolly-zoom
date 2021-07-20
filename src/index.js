@@ -1,9 +1,9 @@
 import * as THREE from "three";
-import TWEEN from '@tweenjs/tween.js';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { MTLLoader } from 'three/examples/jsm/loaders/MTLLoader.js';
-import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js';
-import Stats from 'stats.js';
+import TWEEN from "@tweenjs/tween.js";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import { MTLLoader } from "three/examples/jsm/loaders/MTLLoader.js";
+import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader.js";
+import Stats from "stats.js";
 
 let container, controls;
 let camera, scene, renderer;
@@ -15,18 +15,25 @@ let isAnimating = false;
 let treeMesh;
 let finnMesh;
 
+const ctaElem = document.getElementById("cta");
+
 const stats = new Stats();
 stats.domElement.style.right = 0;
-stats.domElement.style.left = 'initial';
+stats.domElement.style.left = "initial";
 document.body.appendChild(stats.dom);
 
 init();
 
 function init() {
-  container = document.createElement('div');
+  container = document.createElement("div");
   document.body.appendChild(container);
 
-  camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.25, 200);
+  camera = new THREE.PerspectiveCamera(
+    45,
+    window.innerWidth / window.innerHeight,
+    0.25,
+    200
+  );
   camera.position.set(0, 2, 5);
 
   scene = new THREE.Scene();
@@ -39,7 +46,7 @@ function init() {
   renderer.shadowMap.enabled = true;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 0.8;
-  renderer.outputEncoding = THREE.sRGBEncoding
+  renderer.outputEncoding = THREE.sRGBEncoding;
 
   container.appendChild(renderer.domElement);
 
@@ -54,41 +61,42 @@ function init() {
   makeAnimations();
   loadAssets();
 
-  window.addEventListener('resize', onWindowResize, false);
-  window.addEventListener('click', onClick, false);
+  window.addEventListener("resize", onWindowResize, false);
+  window.addEventListener("click", onClick, false);
   animate();
 }
 
 function loadAssets() {
   var manager = new THREE.LoadingManager();
   new MTLLoader(manager)
-    .setPath('assets/')
-    .load('lowpolytree.mtl', function (materials) {
-
+    .setPath("assets/")
+    .load("lowpolytree.mtl", function (materials) {
       materials.preload();
 
       new OBJLoader(manager)
         .setMaterials(materials)
-        .setPath('assets/')
-        .load('lowpolytree.obj', function (object) {
-          treeMesh = object.children[0];
-          treeMesh.castShadow = true;
-          // treeMesh.receiveShadow = true;
-          treeMesh.geometry.applyMatrix4(new THREE.Matrix4().makeTranslation(0, 1.9, 0));
-          addTrees();
-        }, () => {
-
-        }, () => {
-
-        });
-
+        .setPath("assets/")
+        .load(
+          "lowpolytree.obj",
+          function (object) {
+            treeMesh = object.children[0];
+            treeMesh.castShadow = true;
+            // treeMesh.receiveShadow = true;
+            treeMesh.geometry.applyMatrix4(
+              new THREE.Matrix4().makeTranslation(0, 1.9, 0)
+            );
+            addTrees();
+          },
+          () => {},
+          () => {}
+        );
     });
 
-  const finnTexture = new THREE.TextureLoader().load('assets/Finn.png');
+  const finnTexture = new THREE.TextureLoader().load("assets/Finn.png");
 
-  new OBJLoader(manager)
-    .setPath('assets/')
-    .load('Finn.obj', function (object) {
+  new OBJLoader(manager).setPath("assets/").load(
+    "Finn.obj",
+    function (object) {
       finnMesh = object.children[0];
       finnMesh.material.map = finnTexture;
       finnMesh.scale.set(0.03, 0.03, 0.03);
@@ -96,27 +104,26 @@ function loadAssets() {
       finnMesh.castShadow = true;
       // finnMesh.receiveShadow = true;
       scene.add(object);
-    }, () => {
-
-    }, () => {
-
-    });
+    },
+    () => {},
+    () => {}
+  );
 }
 
 function addTrees() {
   const n = 7;
-  for (let x = - n / 2; x < n / 2; x++) {
+  for (let x = -n / 2; x < n / 2; x++) {
     for (let y = 1; y < 8; y++) {
       const treeOne = treeMesh.clone();
-      treeOne.position.z = -y * 4 + ((Math.random() * 2) - 1);
-      treeOne.position.x = -x * 3.5 + ((Math.random() * 2) - 1);
+      treeOne.position.z = -y * 4 + (Math.random() * 2 - 1);
+      treeOne.position.x = -x * 3.5 + (Math.random() * 2 - 1);
       scene.add(treeOne);
     }
   }
 }
 
 function onClick() {
-
+  ctaElem.style.opacity = 0;
   if (isAnimating) {
     return;
   }
@@ -139,7 +146,6 @@ function inAnim() {
 }
 
 function makeAnimations() {
-
   const animationTime = 1000;
   const curve = TWEEN.Easing.Quadratic.In;
 
@@ -176,11 +182,14 @@ function makeAnimations() {
 
 function addItems() {
   const geometry = new THREE.PlaneBufferGeometry(100, 100, 1);
-  const material = new THREE.MeshLambertMaterial({ color: new THREE.Color('hsl(120, 30%, 30%)'), side: THREE.DoubleSide });
+  const material = new THREE.MeshLambertMaterial({
+    color: new THREE.Color("hsl(120, 30%, 30%)"),
+    side: THREE.DoubleSide,
+  });
   const ground = new THREE.Mesh(geometry, material);
 
   ground.receiveShadow = true;
-  ground.rotation.x = - Math.PI / 2;
+  ground.rotation.x = -Math.PI / 2;
   scene.add(ground);
 
   const sunGeometry = new THREE.CircleBufferGeometry(2, 32);
